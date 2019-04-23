@@ -54,6 +54,8 @@ import System.ZMQ4.Endpoint
 import Options.Applicative
 import Data.Semigroup ((<>))
 
+import System.Remote.Monitoring
+
 runZreOpts :: ZRE a -> IO ()
 runZreOpts app = do
   cfg <- execParser opts
@@ -95,6 +97,8 @@ runZre a = do
 
 runZreCfg :: ZRECfg -> ZRE a -> IO ()
 runZreCfg ZRECfg{..} app = do
+    forkServer "localhost" 8000
+
     ifcs <- getIfaces zreInterfaces
 
     u <- maybeM (exitFail "Unable to get UUID") return nextUUID
